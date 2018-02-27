@@ -1,0 +1,70 @@
+void drawGrail()
+{
+  background(232, 193, 99);
+  characterMovement();
+  
+  pushMatrix();
+  fill(104, 83, 56);
+  translate(70,150);
+  rect(0,0,120,120);
+  popMatrix();
+  
+  pushMatrix();
+  fill(104, 83, 56);
+  translate(600,150);
+  rect(0,0,120,120);
+  popMatrix();
+  
+  pushMatrix();
+  fill(104, 83, 56);
+  translate(335,150);
+  rect(0,0,120,120);
+  popMatrix();
+  
+  pushMatrix();
+  fill(168, 3, 3);
+  translate(96,150);
+  rect(0,0,65,90);
+  popMatrix();
+  
+  pushMatrix();
+  fill(168, 3, 3);
+  translate(362,150);
+  rect(0,0,65,90);
+  popMatrix();
+  
+  pushMatrix();
+  fill(168, 3, 3);
+  translate(628,150);
+  rect(0,0,65,90);
+  popMatrix();
+  
+  pushMatrix();
+  fill(242, 239, 62);
+  translate(650,130);
+  rect(-2,0,19,33);
+  ellipse(7,0,50,35);
+  fill(232, 193, 99);
+  rect(-20,-20,60,20);
+  popMatrix();
+  
+  pushMatrix();
+  fill(242, 239, 62);
+  translate(385,130);
+  rect(-2,0,19,33);
+  ellipse(7,0,50,35);
+  fill(232, 193, 99);
+  rect(-20,-20,60,20);
+  popMatrix();
+  
+  pushMatrix();
+  fill(155, 127, 79);
+  translate(120,130);
+  rect(-2,0,19,33);
+  ellipse(7,0,50,35);
+  fill(232, 193, 99);
+  rect(-20,-20,60,20);
+  popMatrix();
+  
+  
+}
