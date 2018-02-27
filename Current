@@ -1,0 +1,1181 @@
+/*
+    COM 309 Computer Graphics & Virtual Enviornments
+    
+    Midterm Project
+    
+    By Luke Karis and Laurence Redpath 
+*/
+
+//Determines what screen is displayed
+int screenNum = 0;     
+
+//Determines the players movement speed
+int playerSpeed = 5;
+
+//Moves player on X axis
+int moveX;
+
+//Moves player on Y axis
+int moveY;
+
+//Determines which direction the character is facing and thus which character
+//model should be drawn
+int direction = 0;
+
+//Number of lives that the player has before the game makes them restart from 
+//the begining
+int lives = 3;
+
+boolean victory = false;
+boolean loss = false;
+
+void setup()
+{
+  size(800, 800);
+  smooth();
+  noStroke();
+  frameRate(30);
+  
+  //Starting positions of moveX and moveY
+  moveX = 90;
+  moveY = 360;
+}
+
+void draw()
+{
+  //If screenNum variable is equal to zero then draws the intro screen
+  if(screenNum == 0)
+  {
+    drawIntro();
+  }
+  
+  //If screenNum variable is equal to one then draws the scene 
+  else if(screenNum == 1)
+  {
+    drawEntrance();
+    //drawLeap();
+  }
+  
+  //If screenNum variable is equal to one then draws the scene 
+  else if(screenNum == 2)
+  {
+    drawSaws();
+  }
+  
+  //If screenNum variable is equal to one then draws the scene 
+  else if(screenNum == 3)
+  {
+    drawLetters();
+  }
+  
+  //If screenNum variable is equal to one then draws the scene 
+  else if(screenNum == 4)
+  {
+    drawLeap();
+  }
+  
+  //If screenNum variable is equal to one then draws the scene 
+  else if(screenNum == 5)
+  {
+    drawGrail();
+  }
+  
+}
+
+//Sets screenNum variable to 1 if the mouse has been pressed
+void mousePressed() 
+{
+  if (screenNum == 0) 
+  {
+    screenNum = 1;
+  }
+}
+
+//-------------------------------------------------------------------------------
+
+//Draws intro screen that gives information on how to use/control the program
+void drawIntro()
+{
+  background(109, 164, 249);
+  
+  String titleMsg = "Welcome to The Leap of Faith!";
+  String author = "By Luke Karis";
+  String background = "This interactive project is a recreation of the Leap of Faith scene from the movie, Indiana Jones and the Last Crusade.";
+  String instruccions = "To move the character around the screen use the arrow keys";
+  String click = "Click anywhere to continue";
+  
+  pushMatrix();
+  translate(150, 150);
+  textSize(40);
+  text(titleMsg, 0, 0, 800, 100);
+  popMatrix();
+  
+  pushMatrix();
+  translate(150, 230);
+  textSize(30);
+  text(author, 0, 0);
+  popMatrix();
+  
+  pushMatrix();
+  translate(200, 300);
+  textSize(25);
+  text(background, 0, 0, 600, 400);
+  popMatrix();
+  
+  pushMatrix();
+  translate(200, 460);
+  textSize(25);
+  text(instruccions, 0, 0, 350, 200);
+  popMatrix();
+  
+  pushMatrix();
+  translate(200, 630);
+  textSize(25);
+  text(click, 0, 0);
+  popMatrix();
+}
+
+//---------------------------------------------------------------------------
+
+void characterMovement()
+{
+  pushMatrix();
+  
+  //If direction is equal to 0 then draws the character front on
+  if (direction == 0)
+  {
+    translate(moveX, moveY);  //Sets new position for character to be drawn at
+    drawCharacterStart();
+  }
+  
+  //If direction is equal to 1 then draws the character from behind
+  else if (direction == 1)
+  {
+    translate(moveX, moveY);
+    drawCharacterUp();
+  }
+  
+  //If direction is equal to 2 then draws the character facing the right
+  else if (direction == 2)
+  {
+    translate(moveX, moveY);
+    drawCharacterRight();
+  }
+  
+  //If direction is equal to 3 then draws the character facing the left
+  else if (direction == 3)
+  {
+    translate(moveX, moveY);
+    drawCharacterLeft();
+  }
+  popMatrix();
+}
+
+//Draws the different Scenes
+//-----------------------------------------------------------------------
+
+void drawEntrance()
+{
+  background(232, 193, 99);
+  characterMovement();
+  fill(0);
+  rect(0,150,800,4);
+  
+  drawBluesiut();
+  
+  drawDrSchnieder();
+}
+
+void drawSaws()
+{
+  background(249, 242, 14);
+  characterMovement();
+}
+
+void drawLetters()
+{
+  background(249, 14, 170);
+  characterMovement();
+}
+
+//Draws background objects/scenery and the character
+void drawLeap()
+{
+  background(175, 143, 84);
+  
+  //Draws background objects/scenery
+  fill(58, 55, 50);
+  triangle(100, 700, 400, 0, 700, 700);  //Triangle part of the chasm
+  rect(100, 700, 600, 100); //Rectangular part of chasm  
+  
+  fill(0);
+  rect(0, 700, 100, 5); //Left line
+  rect(700, 700, 100, 5); //Right line
+  
+  String quote = "Only in the leap from the lion's head will he prove his worth";
+  String direction = "To the Holy Grail!";
+  
+  pushMatrix();
+  translate(30, 30);
+  textSize(20);
+  text(quote, 0, 0, 200, 300);
+  popMatrix();
+  
+  pushMatrix();
+  translate(600, 70);
+  textSize(20);
+  text(direction, 0, 0);
+  popMatrix();
+  
+  //Arrow pointing towards the holy grail
+  fill(0);
+  rect(700, 100, 50, 3);
+  triangle(750, 85, 750, 115, 765, 100); 
+  
+  fill(242, 239, 62);
+  arc(725, 140, 40, 40, -.4, PI+QUARTER_PI, OPEN); //Holy Grail Cup
+  
+  pushMatrix();
+  translate(715, 150);
+  rotate(radians(12));
+  rect(0, 0, 15, 30);//Holy Grail Base
+  popMatrix();
+  
+  //Draws Character and allows him to move around
+  characterMovement();
+}
+
+
+void drawGrail()
+{
+  background(193, 168, 247);
+  characterMovement();
+}
+
+//--------------------------------------------------------------------------------
+
+//Checks button imputs and moves the character based on button imputs detected
+void keyPressed() {
+  if (key == CODED) 
+  {
+    //If the up arrow key is pressed moves the character up the screen
+    //Sets deriction equal to one so the character will be drawn facing backwards
+    if ((keyCode == UP) && (moveY > 110)) 
+    {
+      direction = 1;
+      moveY = moveY - playerSpeed;
+    }
+    //If the down arrow key is pressed moves the character down the screen
+    //Sets deriction equal to zero so the character will be drawn facing forwards
+    else if ((keyCode == DOWN) && (moveY < 550))
+    {
+      direction = 0;
+      moveY = moveY + playerSpeed;
+    } 
+    //If the right arrow key is pressed moves the character to the right
+    //Sets deriction equal to zero so the character will be drawn facing the right
+    else if (keyCode == RIGHT)
+    {
+      if(moveX > 800 && screenNum != 5) //Changes the scene if the character is far enought to the right
+      {
+        screenNum = screenNum + 1;
+        moveX = 90;
+      }
+     
+      direction = 2;
+      moveX = moveX + playerSpeed;
+      
+    }
+    //If the left arrow key is pressed moves the character to the left
+    //Sets deriction equal to zero so the character will be drawn facing the left
+    else if (keyCode == LEFT)
+    {
+      if(moveX < 0 && screenNum != 1) //Changes the scene if the character is far enought to the left
+      {
+        screenNum = screenNum - 1;
+        moveX = 710;
+      }
+      direction = 3;
+      moveX = moveX - playerSpeed;
+    }
+  }
+}
+
+//-------------------------------------------------------------------------
+void drawDrSchnieder()
+{
+  pushMatrix();
+  fill(220, 226, 83);
+  translate(600,30);
+  ellipse(0,0,50,70);//Ponytail
+  popMatrix();
+  
+  pushMatrix();
+  fill(118, 119, 95);
+  translate(578, 150);
+  rect(0, 0, 20, 90);  //Left pant leg CS
+  popMatrix();
+  
+  pushMatrix();
+  fill(118, 119, 95);
+  translate(602, 150);
+  rect(0, 0, 20, 90); //Right pant leg CS
+  popMatrix();
+  
+  pushMatrix();
+  fill(242, 236, 227);
+  translate(600,100);
+  ellipse(0, 0, 45, 110); //White body CS
+  popMatrix();
+  
+  pushMatrix();
+  fill(252, 230, 176);  //Skin color CS
+  translate(600, 30);
+  ellipse(0, 0, 40, 50);  //Head CS
+  popMatrix();
+  
+  pushMatrix();
+  fill(252, 230, 176); 
+  translate(582, 30);
+  ellipse(0, 0, 10, 15);  //Left ear CS
+  popMatrix();
+  
+  pushMatrix();
+  fill(252, 230, 176); 
+  translate(618, 30);
+  ellipse(0, 0, 10, 15);  //Right ear CS
+  popMatrix();
+  
+  pushMatrix();
+  fill(255);
+  translate(590, 30);
+  ellipse(0,0, 10, 13); //Left eye background CS
+  popMatrix();
+  
+  pushMatrix();
+  fill(255);
+  translate(610, 30);
+  ellipse(0,0, 10, 13);  //Right eye background CS
+  popMatrix();
+  
+  pushMatrix();
+  fill(0);
+  translate(591, 31);
+  ellipse(0, 0, 3, 3);  //Left pupil CS
+  popMatrix();
+  
+  pushMatrix();
+  fill(0);
+  translate(609, 31);
+  ellipse(0, 0, 3, 3);   //Right pupil CS
+  popMatrix();
+  
+  pushMatrix();
+  fill(0);
+  translate(600,32);
+  rotate(radians(-40));
+  rect(0, 0, .5, 9.5);  //Top part of nose CS
+  popMatrix();
+  
+  pushMatrix();
+  fill(0);
+  translate(599, 40);
+  rotate(radians(-90));
+  rect(0, 0, .5, 7);  //Bottom part of nose CS
+  popMatrix();
+  
+  pushMatrix();
+  fill(186, 74, 0);
+  translate(598, 48);
+  rotate(radians(-85));
+  rect(0, 0, .7, 7.5);  //Mouth CS
+  popMatrix();
+  
+  pushMatrix();
+  fill(220, 226, 83);
+  translate(600, 13);
+  ellipse(0, 0, 33, 15);  //hair
+  popMatrix();
+  
+  pushMatrix();
+  fill(44, 109, 55);
+  translate(587.5, -7);
+  rect(0, 0, 25, 20);  //Hat top CS
+  popMatrix();
+  
+  pushMatrix();
+  fill(0);
+  translate(587.5, 0);
+  rect(0, 0, 25, 6);  //Hat black strap CS
+  popMatrix();
+  
+  pushMatrix();
+  fill(209, 202, 150);
+  translate(571.5, 60);
+  rect(0, 0, 20, 100);  //Left jacket main body CS
+  popMatrix();
+  
+  pushMatrix();
+  fill(209, 202, 150);
+  translate(608.6, 60);
+  rect(0, 0, 20, 100);  //Right jacket main body CS
+  popMatrix();
+  
+  pushMatrix();
+  fill(209, 202, 150);
+  translate(571.4, 60);  
+  triangle(0, 0, 20, -8.5, 20, 0);  //Left Jacket Collar CS
+  popMatrix();
+  
+  pushMatrix();
+  fill(209, 202, 150);
+  translate(608.6, 60);
+  triangle(0,0, 20, 0, 0, -8.5); //Right Jacket Collar CS
+  popMatrix();
+  
+  pushMatrix();
+  fill(252, 230, 176);
+  translate(540, 122);
+  ellipse(0, 0, 17, 17);  //Left Palm CS
+  popMatrix();
+  
+  pushMatrix();
+  fill(252, 230, 176);
+  translate(660, 122);
+  ellipse(0, 0, 17, 17); //Right Palm CS
+  popMatrix();
+  
+  pushMatrix();
+  fill(209, 202, 150);
+  translate(571.4, 60);
+  rotate(radians(35));
+  rect(0, 0, 20, 65);  //Left Jacket Sleeve CS
+  popMatrix();
+  
+  pushMatrix();
+  fill(209, 202, 150);
+  translate(612, 72);
+  rotate(radians(-35));
+  rect(0, 0, 20, 65);  //Right Jacket Sleeve CS
+  popMatrix();
+ 
+  pushMatrix();
+  fill(0);
+  translate(588, 240);
+  ellipse(0, 0, 20, 20);  //Left Shoe Base CS
+  popMatrix();
+  
+  pushMatrix();
+  fill(0);
+  translate(612, 240);
+  ellipse(0, 0, 20, 20);  //Right Shoe Base CS
+  popMatrix();
+  
+  pushMatrix();
+  fill(0);
+  translate(578, 240);
+  rect(0, 0, 20, 10);  //Left Shoe Sole CS
+  popMatrix();
+  
+  pushMatrix();
+  fill(0);
+  translate(602, 240);
+  rect(0, 0, 20, 10);  //Right Shoe Sole CS
+  popMatrix();
+  endShape();
+}
+
+void drawBluesiut()
+{
+   pushMatrix();
+  fill(239, 245, 255);
+  translate(378, 150);
+  rect(0, 0, 20, 90);  //Left pant leg CS
+  popMatrix();
+  
+  pushMatrix();
+  fill(239, 245, 255);
+  translate(402, 150);
+  rect(0, 0, 20, 90); //Right pant leg CS
+  popMatrix();
+  
+  pushMatrix();
+  fill(148, 186, 247);
+  translate(400,100);
+  ellipse(0, 0, 45, 110); //White body CS
+  popMatrix();
+
+  pushMatrix();
+  fill(0);
+  translate(400,90);
+  triangle(0,0,-15,-50,15,-50);
+  popMatrix();
+
+  pushMatrix();
+  fill(96, 97, 99);
+  translate(400, 13);
+  ellipse(0, 0, 40, 20);  //Hat base CS
+  popMatrix();
+  
+  pushMatrix();
+  fill(252, 230, 176);  //Skin color CS
+  translate(400, 30);
+  ellipse(0, 0, 40, 50);  //Head CS
+  popMatrix();
+  
+  pushMatrix();
+  fill(252, 230, 176); 
+  translate(382, 30);
+  ellipse(0, 0, 10, 15);  //Left ear CS
+  popMatrix();
+  
+  pushMatrix();
+  fill(252, 230, 176); 
+  translate(418, 30);
+  ellipse(0, 0, 10, 15);  //Right ear CS
+  popMatrix();
+  
+  pushMatrix();
+  fill(255);
+  translate(390, 30);
+  ellipse(0,0, 10, 13); //Left eye background CS
+  popMatrix();
+  
+  pushMatrix();
+  fill(255);
+  translate(410, 30);
+  ellipse(0,0, 10, 13);  //Right eye background CS
+  popMatrix();
+  
+  pushMatrix();
+  fill(0);
+  translate(391, 31);
+  ellipse(0, 0, 3, 3);  //Left pupil CS
+  popMatrix();
+  
+  pushMatrix();
+  fill(0);
+  translate(409, 31);
+  ellipse(0, 0, 3, 3);   //Right pupil CS
+  popMatrix();
+  
+  pushMatrix();
+  fill(0);
+  translate(400,32);
+  rotate(radians(-40));
+  rect(0, 0, .5, 9.5);  //Top part of nose CS
+  popMatrix();
+  
+  pushMatrix();
+  fill(0);
+  translate(399, 40);
+  rotate(radians(-90));
+  rect(0, 0, .5, 7);  //Bottom part of nose CS
+  popMatrix();
+  
+  pushMatrix();
+  fill(0);
+  translate(398, 48);
+  rotate(radians(-85));
+  rect(0, 0, .7, 7.5);  //Mouth CS
+  popMatrix();
+  
+  pushMatrix();
+  fill(148, 186, 247);
+  translate(371.5, 60);
+  rect(0, 0, 20, 100);  //Left jacket main body CS
+  popMatrix();
+  
+  pushMatrix();
+  fill(148, 186, 247);
+  translate(408.6, 60);
+  rect(0, 0, 20, 100);  //Right jacket main body CS
+  popMatrix();
+  
+  pushMatrix();
+  fill(148, 186, 247);
+  translate(371.4, 60);  
+  triangle(0, 0, 20, -8.5, 20, 0);  //Left Jacket Collar CS
+  popMatrix();
+  
+  pushMatrix();
+  fill(148, 186, 247);
+  translate(408.6, 60);
+  triangle(0,0, 20, 0, 0, -8.5); //Right Jacket Collar CS
+  popMatrix();
+  
+  pushMatrix();
+  fill(252, 230, 176);
+  translate(340, 122);
+  ellipse(0, 0, 17, 17);  //Left Palm CS
+  popMatrix();
+  
+  pushMatrix();
+  fill(252, 230, 176);
+  translate(460, 122);
+  ellipse(0, 0, 17, 17); //Right Palm CS
+  popMatrix();
+  
+  pushMatrix();
+  fill(148, 186, 247);
+  translate(371.4, 60);
+  rotate(radians(35));
+  rect(0, 0, 20, 65);  //Left Jacket Sleeve CS
+  popMatrix();
+  
+  pushMatrix();
+  fill(148, 186, 247);
+  translate(412, 72);
+  rotate(radians(-35));
+  rect(0, 0, 20, 65);  //Right Jacket Sleeve CS
+  popMatrix();
+ 
+  pushMatrix();
+  fill(0);
+  translate(388, 240);
+  ellipse(0, 0, 20, 20);  //Left Shoe Base CS
+  popMatrix();
+  
+  pushMatrix();
+  fill(0);
+  translate(412, 240);
+  ellipse(0, 0, 20, 20);  //Right Shoe Base CS
+  popMatrix();
+  
+  pushMatrix();
+  fill(0);
+  translate(378, 240);
+  rect(0, 0, 20, 10);  //Left Shoe Sole CS
+  popMatrix();
+  
+  pushMatrix();
+  fill(0);
+  translate(402, 240);
+  rect(0, 0, 20, 10);  //Right Shoe Sole CS
+  popMatrix();
+}
+
+//Draws Chacter Front on
+//CS Stands for Character Start
+void drawCharacterStart()
+{
+  //HitBox
+  pushMatrix();
+  fill(255);
+  translate(0, 20);
+  ellipse(0,0, 135, 265);
+  popMatrix();
+  
+  pushMatrix();
+  fill(132, 109, 71);
+  translate(-22, 50);
+  rect(0, 0, 20, 90);  //Left pant leg CS
+  popMatrix();
+  
+  pushMatrix();
+  fill(132, 109, 71);
+  translate(2, 50);
+  rect(0, 0, 20, 90); //Right pant leg CS
+  popMatrix();
+  
+  fill(242, 236, 227);
+  ellipse(0, 0, 45, 110); //White body CS
+  
+  pushMatrix();
+  fill(252, 230, 176);  //Skin color CS
+  translate(0, -70);
+  ellipse(0, 0, 40, 50);  //Head CS
+  popMatrix();
+  
+  pushMatrix();
+  fill(252, 230, 176); 
+  translate(-18, -70);
+  ellipse(0, 0, 10, 15);  //Left ear CS
+  popMatrix();
+  
+  pushMatrix();
+  fill(252, 230, 176); 
+  translate(18, -70);
+  ellipse(0, 0, 10, 15);  //Right ear CS
+  popMatrix();
+  
+  pushMatrix();
+  fill(255);
+  translate(-10, -70);
+  ellipse(0,0, 10, 13); //Left eye background CS
+  popMatrix();
+  
+  pushMatrix();
+  fill(255);
+  translate(10, -70);
+  ellipse(0,0, 10, 13);  //Right eye background CS
+  popMatrix();
+  
+  pushMatrix();
+  fill(0);
+  translate(-9, -69);
+  ellipse(0, 0, 3, 3);  //Left pupil CS
+  popMatrix();
+  
+  pushMatrix();
+  fill(0);
+  translate(9, -69);
+  ellipse(0, 0, 3, 3);   //Right pupil CS
+  popMatrix();
+  
+  pushMatrix();
+  fill(0);
+  translate(0,-68);
+  rotate(radians(-40));
+  rect(0, 0, .5, 9.5);  //Top part of nose CS
+  popMatrix();
+  
+  pushMatrix();
+  fill(0);
+  translate(-1, -60);
+  rotate(radians(-90));
+  rect(0, 0, .5, 7);  //Bottom part of nose CS
+  popMatrix();
+  
+  pushMatrix();
+  fill(0);
+  translate(-2, -52);
+  rotate(radians(-85));
+  rect(0, 0, .7, 7.5);  //Mouth CS
+  popMatrix();
+  
+  pushMatrix();
+  fill(114, 93, 59);
+  translate(0, -90);
+  ellipse(0, 0, 55, 15);  //Hat base CS
+  popMatrix();
+  
+  pushMatrix();
+  fill(114, 93, 59);
+  translate(-12.5, -110);
+  rect(0, 0, 25, 20);  //Hat top CS
+  popMatrix();
+  
+  pushMatrix();
+  fill(0);
+  translate(-12.5, -100);
+  rect(0, 0, 25, 6);  //Hat black strap CS
+  popMatrix();
+  
+  pushMatrix();
+  fill(114, 93, 59);
+  translate(-28.6, -40);
+  rect(0, 0, 20, 100);  //Left jacket main body CS
+  popMatrix();
+  
+  pushMatrix();
+  fill(114, 93, 59);
+  translate(8.6, -40);
+  rect(0, 0, 20, 100);  //Right jacket main body CS
+  popMatrix();
+  
+  pushMatrix();
+  fill(114, 93, 59);
+  translate(-28.6, -40);  
+  triangle(0, 0, 20, -8.5, 20, 0);  //Left Jacket Collar CS
+  popMatrix();
+  
+  pushMatrix();
+  fill(114, 93, 59);
+  translate(8.6, -40);
+  triangle(0,0, 20, 0, 0, -8.5); //Right Jacket Collar CS
+  popMatrix();
+  
+  pushMatrix();
+  fill(252, 230, 176);
+  translate(-60, 22);
+  ellipse(0, 0, 17, 17);  //Left Palm CS
+  popMatrix();
+  
+  pushMatrix();
+  fill(252, 230, 176);
+  translate(60, 22);
+  ellipse(0, 0, 17, 17); //Right Palm CS
+  popMatrix();
+  
+  pushMatrix();
+  fill(114, 93, 59);
+  translate(-28.6, -40);
+  rotate(radians(35));
+  rect(0, 0, 20, 65);  //Left Jacket Sleeve CS
+  popMatrix();
+  
+  pushMatrix();
+  fill(114, 93, 59);
+  translate(12, -28);
+  rotate(radians(-35));
+  rect(0, 0, 20, 65);  //Right Jacket Sleeve CS
+  popMatrix();
+ 
+  pushMatrix();
+  fill(0);
+  translate(-12, 140);
+  ellipse(0, 0, 20, 20);  //Left Shoe Base CS
+  popMatrix();
+  
+  pushMatrix();
+  fill(0);
+  translate(12, 140);
+  ellipse(0, 0, 20, 20);  //Right Shoe Base CS
+  popMatrix();
+  
+  pushMatrix();
+  fill(0);
+  translate(-22, 140);
+  rect(0, 0, 20, 10);  //Left Shoe Sole CS
+  popMatrix();
+  
+  pushMatrix();
+  fill(0);
+  translate(2, 140);
+  rect(0, 0, 20, 10);  //Right Shoe Sole CS
+  popMatrix();
+  
+}
+
+//Draws the character from behind
+//CU stands for Character Up
+void drawCharacterUp()
+{
+  
+  //HitBox
+  pushMatrix();
+  fill(255);
+  translate(0, 20);
+  ellipse(0,0, 135, 265);
+  popMatrix();
+  
+  pushMatrix();
+  fill(132, 109, 71);
+  translate(-22, 50);
+  rect(0, 0, 20, 90);  //Left pant leg CU
+  popMatrix();
+  
+  pushMatrix();
+  fill(132, 109, 71);
+  translate(2, 50);
+  rect(0, 0, 20, 90); //Right pant leg CU
+  popMatrix();
+  
+  fill(242, 236, 227);
+  ellipse(0, 0, 45, 110); //White body CU
+  
+  pushMatrix();
+  fill(252, 230, 176);  //Skin color CU
+  translate(0, -70);
+  ellipse(0, 0, 40, 50);  //Head CU
+  popMatrix();
+  
+  pushMatrix();
+  fill(252, 230, 176); 
+  translate(-18, -70);
+  ellipse(0, 0, 10, 15);  //Left ear CU
+  popMatrix();
+  
+  pushMatrix();
+  fill(252, 230, 176); 
+  translate(18, -70);
+  ellipse(0, 0, 10, 15);  //Right ear CU
+  popMatrix();
+  
+  pushMatrix();
+  fill(114, 93, 59);
+  translate(0, -90);
+  ellipse(0, 0, 55, 15);  //Hat base CU
+  popMatrix();
+  
+  pushMatrix();
+  fill(114, 93, 59);
+  translate(-12.5, -110);
+  rect(0, 0, 25, 20);  //Hat top CU
+  popMatrix();
+  
+  pushMatrix();
+  fill(0);
+  translate(-12.5, -100);
+  rect(0, 0, 25, 6);  //Hat black strap CU
+  popMatrix();
+  
+  pushMatrix();
+  fill(114, 93, 59);
+  translate(-28.6, -40);  
+  triangle(0, 0, 20, -8.5, 20, 0);  //Left Jacket Collar CU
+  popMatrix();
+  
+  pushMatrix();
+  fill(114, 93, 59);
+  translate(8.6, -40);
+  triangle(0,0, 20, 0, 0, -8.5); //Right Jacket Collar CU
+  popMatrix();
+  
+  pushMatrix();
+  fill(114, 93, 59);
+  translate(-9, -48);
+  rect(0, 0, 18, 10); //Middle Jacket Collar CU
+  popMatrix();
+  
+  pushMatrix();
+  fill(252, 230, 176);
+  translate(-60, 22);
+  ellipse(0, 0, 17, 17);  //Left Palm CU
+  popMatrix();
+  
+  pushMatrix();
+  fill(252, 230, 176);
+  translate(60, 22);
+  ellipse(0, 0, 17, 17); //Right Palm CU
+  popMatrix();
+  
+  pushMatrix();
+  fill(114, 93, 59);
+  translate(-28.6, -40);
+  rotate(radians(35));
+  rect(0, 0, 20, 65);  //Left Jacket Sleeve CU
+  popMatrix();
+  
+  pushMatrix();
+  fill(114, 93, 59);
+  translate(12, -28);
+  rotate(radians(-35));
+  rect(0, 0, 20, 65);  //Right Jacket Sleeve CU
+  popMatrix();
+  
+  pushMatrix();
+  fill(114, 93, 59);
+  translate(-28.6, -40);
+  rect(0,0, 56, 100);  //Jacket Back CU
+  popMatrix();
+  
+  pushMatrix();
+  fill(0);
+  translate(-22, 130);
+  rect(0, 0, 20, 20);  //Left Shoe Sole CU
+  popMatrix();
+  
+  pushMatrix();
+  fill(0);
+  translate(2, 130);
+  rect(0, 0, 20, 20);  //Right Shoe Sole CU
+  popMatrix();
+}
+
+//Draws Character facing the left
+//CL stands for Character Left
+void drawCharacterLeft()
+{
+  
+  //HitBox
+  pushMatrix();
+  fill(255);
+  translate(0, 20);
+  ellipse(0,0, 80, 265);
+  popMatrix();
+  
+  pushMatrix();
+  fill(132, 109, 71);
+  translate(-10, 50);
+  rect(0, 0, 20, 90);  //Left pant leg CL
+  popMatrix();
+  
+  pushMatrix();
+  fill(0);
+  translate(-12, 140);
+  ellipse(0, 0, 20, 20);  //Left Shoe Base CL
+  popMatrix();
+  
+  pushMatrix();
+  fill(0);
+  translate(-10, 130);
+  rect(0, 0, 20, 20);  //Left Shoe Upper Sole CL
+  popMatrix();
+  
+  pushMatrix();
+  fill(0);
+  translate(-22, 140);
+  rect(0, 0, 20, 10);  //Left Shoe Lower Sole CL
+  popMatrix();
+  
+  fill(242, 236, 227);
+  ellipse(0, 0, 45, 110); //White body CL
+  
+  pushMatrix();
+  fill(252, 230, 176);  //Skin color CL
+  translate(0, -70);
+  ellipse(0, 0, 40, 50);  //Head CL
+  popMatrix();
+  
+  pushMatrix();
+  fill(255);
+  translate(-10, -70);
+  ellipse(0,0, 10, 13); //Left eye background CL
+  popMatrix();
+  
+  pushMatrix();
+  fill(0);
+  translate(-11, -69);
+  ellipse(0, 0, 3, 3);  //Left pupil CL
+  popMatrix();
+  
+  pushMatrix();
+  fill(0);
+  translate(-16, -55);
+  rotate(radians(-93));
+  rect(0, 0, .7, 7.5);  //Mouth CL
+  popMatrix();
+  
+  pushMatrix();
+  fill(114, 93, 59);
+  translate(0, -90);
+  ellipse(0, 0, 55, 15);  //Hat base CL
+  popMatrix();
+  
+  pushMatrix();
+  fill(114, 93, 59);
+  translate(-12.5, -110);
+  rect(0, 0, 25, 20);  //Hat top CL
+  popMatrix();
+  
+  pushMatrix();
+  fill(0);
+  translate(-12.5, -100);
+  rect(0, 0, 25, 6);  //Hat black strap CL
+  popMatrix();
+  
+  pushMatrix();
+  fill(114, 93, 59);
+  translate(0, -40);
+  rect(0, 0, 25, 100);  //Left jacket main body CL
+  popMatrix();
+  
+  pushMatrix();
+  fill(252, 230, 176);
+  translate(-31.4, 22);
+  ellipse(0, 0, 17, 17);  //Left Palm CL
+  popMatrix();
+  
+  pushMatrix();
+  fill(114, 93, 59);
+  translate(0, -40);
+  rotate(radians(35));
+  rect(0, 0, 20, 65);  //Left Jacket Sleeve CL
+  popMatrix();
+  
+  pushMatrix();
+  fill(114, 93, 59);
+  translate(0, -40);
+  triangle(0, 0, 25, 0, 14, -10);  //Jacket collar CL
+  popMatrix();
+}
+
+//Draws Character facing the right
+//CR stands for Character Right
+void drawCharacterRight()
+{
+  
+  //HitBox
+  pushMatrix();
+  fill(255);
+  translate(0, 20);
+  ellipse(0,0, 80, 265);
+  popMatrix();
+  
+  pushMatrix();
+  fill(132, 109, 71);
+  translate(-10, 50);
+  rect(0, 0, 20, 90);  //Righ pant leg CR
+  popMatrix();
+  
+  pushMatrix();
+  fill(0);
+  translate(10, 140);
+  ellipse(0, 0, 20, 20);  //Right Shoe Base CR
+  popMatrix();
+  
+  pushMatrix();
+  fill(0);
+  translate(-10, 130);
+  rect(0, 0, 20, 20);  //Right Shoe Upper Sole CR
+  popMatrix();
+  
+  pushMatrix();
+  fill(0);
+  translate(0, 140);
+  rect(0, 0, 20, 10);  //Right Shoe Lower Sole CR
+  popMatrix();
+  
+  fill(242, 236, 227);
+  ellipse(0, 0, 45, 110); //White body CR
+  
+  pushMatrix();
+  fill(252, 230, 176);  //Skin color CR
+  translate(0, -70);
+  ellipse(0, 0, 40, 50);  //Head CR
+  popMatrix();
+  
+  pushMatrix();
+  fill(255);
+  translate(10, -70);
+  ellipse(0,0, 10, 13);  //Right eye background CR
+  popMatrix();
+  
+  pushMatrix();
+  fill(0);
+  translate(11, -69);
+  ellipse(0, 0, 3, 3);   //Right pupil CR
+  popMatrix();
+  
+  pushMatrix();
+  fill(0);
+  translate(9, -55);
+  rotate(radians(-93));
+  rect(0, 0, .7, 7.5);  //Mouth CR
+  popMatrix();
+  
+  pushMatrix();
+  fill(114, 93, 59);
+  translate(0, -90);
+  ellipse(0, 0, 55, 15);  //Hat base CR
+  popMatrix();
+  
+  pushMatrix();
+  fill(114, 93, 59);
+  translate(-12.5, -110);
+  rect(0, 0, 25, 20);  //Hat top CR
+  popMatrix();
+  
+  pushMatrix();
+  fill(0);
+  translate(-12.5, -100);
+  rect(0, 0, 25, 6);  //Hat black strap CR
+  popMatrix();
+  
+  pushMatrix();
+  fill(114, 93, 59);
+  translate(-25, -40);
+  rect(0, 0, 25, 100);  //Right jacket main body CR
+  popMatrix();
+ 
+  pushMatrix();
+  fill(252, 230, 176);
+  translate(32, 22);
+  ellipse(0, 0, 17, 17); //Right Palm CR
+  popMatrix();
+  
+  pushMatrix();
+  fill(114, 93, 59);
+  translate(-16, -28);
+  rotate(radians(-35));
+  rect(0, 0, 20, 65);  //Right Jacket Sleeve CR
+  popMatrix();
+  
+  pushMatrix();
+  fill(114, 93, 59);
+  translate(-25, -40);
+  triangle(0, 0, 25, 0, 14, -10);  //Jacket collar CR
+  popMatrix();
+}
