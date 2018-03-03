@@ -1,0 +1,129 @@
+background(232, 193, 99);
+  String I = "I";
+  String E = "E";
+  String H = "H";
+  String O = "O";
+  String V = "V";
+  String A = "A";
+  String J = "J";
+  String C = "C";
+  String S = "S";
+  String U = "U";
+  String R = "R";
+  String T = "T";
+  
+  pushMatrix();
+  fill(216, 229, 153);
+  translate(100,0);
+  rect(0,0,600,800);
+  popMatrix();
+  
+  pushMatrix();
+  fill(0);
+  translate(250,0);
+  rect(0,0,5,800);
+  rect(150,0,5,800);
+  rect(300,0,5,800);
+  rect(-150,200,600,5);
+  rect(-150,400,600,5);
+  rect(-150,600,600,5);
+  popMatrix();
+  
+  pushMatrix();
+  translate(150,125);
+  textSize(100);
+  text(E,0,0);
+  popMatrix();
+  
+  pushMatrix();
+  translate(150,325);
+  textSize(100);
+  text(J,0,0);
+  popMatrix();
+  
+  pushMatrix();
+  translate(150,525);
+  textSize(100);
+  text(C,0,0);
+  popMatrix();
+  
+  pushMatrix();
+  translate(150,725);
+  textSize(100);
+  text(I,0,0);
+  popMatrix();
+  
+  pushMatrix();
+  translate(300,125);
+  textSize(100);
+  text(S,0,0);
+  popMatrix();
+  
+  pushMatrix();
+  translate(300,325);
+  textSize(100);
+  text(O,0,0);
+  popMatrix();
+  
+  pushMatrix();
+  translate(300,525);
+  textSize(100);
+  text(H,0,0);
+  popMatrix();
+  
+  pushMatrix();
+  translate(300,725);
+  textSize(100);
+  text(E,0,0);
+  popMatrix();
+  
+  pushMatrix();
+  translate(450,125);
+  textSize(100);
+  text(U,0,0);
+  popMatrix();
+  
+  pushMatrix();
+  translate(450,325);
+  textSize(100);
+  text(V,0,0);
+  popMatrix();
+  
+  pushMatrix();
+  translate(450,525);
+  textSize(100);
+  text(R,0,0);
+  popMatrix();
+  
+  pushMatrix();
+  translate(450,725);
+  textSize(100);
+  text(I,0,0);
+  popMatrix();
+  
+  pushMatrix();
+  translate(600,125);
+  textSize(100);
+  text(S,0,0);
+  popMatrix();
+  
+  pushMatrix();
+  translate(600,325);
+  textSize(100);
+  text(A,0,0);
+  popMatrix();
+  
+  pushMatrix();
+  translate(600,525);
+  textSize(100);
+  text(T,0,0);
+  popMatrix();
+  
+  pushMatrix();
+  translate(600,725);
+  textSize(100);
+  text(S,0,0);
+  popMatrix();
+  
+  characterMovement();
+}
