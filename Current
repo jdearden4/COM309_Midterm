@@ -10,13 +10,13 @@
 int screenNum = 0;     
 
 //Determines the players movement speed
-int playerSpeed = 5;
+int playerSpeed = 6;
 
 //Moves player on X axis
-int moveX;
+float moveX;
 
 //Moves player on Y axis
-int moveY;
+float moveY;
 
 //Determines which direction the character is facing and thus which character
 //model should be drawn
@@ -29,6 +29,22 @@ int lives = 3;
 boolean victory = false;
 boolean loss = false;
 
+float saw1X = 400;
+float saw1Y = 700;
+float saw1R = 250;
+
+float saw2X = 400;
+float saw2Y = 100;
+float saw2R = 250;
+
+float hitBoxX = 0;
+float hitBoxY = 0;
+float hitBoxW = 60;
+float hitBoxH = 259;
+
+float timer = 0;
+float step = 0.001;
+
 void setup()
 {
   size(800, 800);
@@ -39,10 +55,22 @@ void setup()
   //Starting positions of moveX and moveY
   moveX = 90;
   moveY = 360;
+
 }
 
 void draw()
 {
+  //Not sure if this belongs here 
+  //Also should we add a death/failure screen that says "you ran out of lives"
+  //or something like that
+  /*
+  if(lives == 0)
+  {
+    screenNum = 1;
+    lives = 3;
+  }
+  */
+  
   //If screenNum variable is equal to zero then draws the intro screen
   if(screenNum == 0)
   {
@@ -54,6 +82,7 @@ void draw()
   {
     drawEntrance();
     //drawLeap();
+    //drawSaws();
   }
   
   //If screenNum variable is equal to one then draws the scene 
@@ -177,31 +206,225 @@ void characterMovement()
 void drawEntrance()
 {
   background(232, 193, 99);
-  characterMovement();
+
   fill(0);
   rect(0,150,800,4);
   
+  pushMatrix();
   drawBluesiut();
+  popMatrix();
   
   drawDrSchnieder();
+  
+  pushMatrix();
+  translate(300,500);
+  rotate((radians(-90)));
+  drawHenry();
+  popMatrix();
+  
+  characterMovement();
 }
+
+//-----------------------------------------------------------------------
 
 void drawSaws()
 {
-  background(249, 242, 14);
+  background(232, 193, 99);
+  
+  timer += step;
+  float moveSaw = sin(degrees(timer))*10.0f;
+
+  saw1Y = saw1Y + moveSaw;
+  saw2Y = saw2Y - moveSaw;
+  
+  hitBoxX = moveX - 28;
+  hitBoxY = moveY - 110;
+  
+  pushMatrix();
+  fill(255);
+  translate(hitBoxX, hitBoxY);
+  rect(0,0, hitBoxW, hitBoxH);
+  popMatrix();
+  
   characterMovement();
+  
+  pushMatrix();
+  fill(165, 165, 145);
+  translate(saw1X, saw1Y);
+  ellipse(0, 0, 500, 500);
+  popMatrix();
+  
+  pushMatrix();
+  fill(165, 165, 145);
+  translate(saw2X, saw2Y);
+  ellipse(0, 0, 500, 500);
+  popMatrix();
+  
+  if(collisionRE(hitBoxX, hitBoxY,saw1X, saw1Y, hitBoxW, hitBoxH, saw1R) || 
+  collisionRE(hitBoxX, hitBoxY,saw2X, saw2Y, hitBoxW, hitBoxH, saw2R))
+  {
+    if (lives <= 0)
+    {
+      screenNum = 1;
+      lives = 3;
+    }
+    else if (lives > 0) //Add && hasGrail == false if get grail walking part to work
+    {
+      moveX = 90;
+      moveY = 360;
+      lives = lives - 1;
+    }
+    //Implement if can figure out coming back with the grail
+    /*
+    else if (lives > 0 && hasGrail)
+    {
+      moveX = 710;
+      moveY = 360;
+      lives = lives - 1;
+    }
+    */
+  }
+  
+  println(lives);
+  
 }
 
 void drawLetters()
 {
-  background(249, 14, 170);
+  background(232, 193, 99);
+  String I = "I";
+  String E = "E";
+  String H = "H";
+  String O = "O";
+  String V = "V";
+  String A = "A";
+  String J = "J";
+  String C = "C";
+  String S = "S";
+  String U = "U";
+  String R = "R";
+  String T = "T";
+  
+  pushMatrix();
+  fill(216, 229, 153);
+  translate(100,0);
+  rect(0,0,600,800);
+  popMatrix();
+  
+  pushMatrix();
+  fill(0);
+  translate(250,0);
+  rect(0,0,5,800);
+  rect(150,0,5,800);
+  rect(300,0,5,800);
+  rect(-150,200,600,5);
+  rect(-150,400,600,5);
+  rect(-150,600,600,5);
+  popMatrix();
+  
+  pushMatrix();
+  translate(150,125);
+  textSize(100);
+  text(E,0,0);
+  popMatrix();
+  
+  pushMatrix();
+  translate(150,325);
+  textSize(100);
+  text(J,0,0);
+  popMatrix();
+  
+  pushMatrix();
+  translate(150,525);
+  textSize(100);
+  text(C,0,0);
+  popMatrix();
+  
+  pushMatrix();
+  translate(150,725);
+  textSize(100);
+  text(I,0,0);
+  popMatrix();
+  
+  pushMatrix();
+  translate(300,125);
+  textSize(100);
+  text(S,0,0);
+  popMatrix();
+  
+  pushMatrix();
+  translate(300,325);
+  textSize(100);
+  text(O,0,0);
+  popMatrix();
+  
+  pushMatrix();
+  translate(300,525);
+  textSize(100);
+  text(H,0,0);
+  popMatrix();
+  
+  pushMatrix();
+  translate(300,725);
+  textSize(100);
+  text(E,0,0);
+  popMatrix();
+  
+  pushMatrix();
+  translate(450,125);
+  textSize(100);
+  text(U,0,0);
+  popMatrix();
+  
+  pushMatrix();
+  translate(450,325);
+  textSize(100);
+  text(V,0,0);
+  popMatrix();
+  
+  pushMatrix();
+  translate(450,525);
+  textSize(100);
+  text(R,0,0);
+  popMatrix();
+  
+  pushMatrix();
+  translate(450,725);
+  textSize(100);
+  text(I,0,0);
+  popMatrix();
+  
+  pushMatrix();
+  translate(600,125);
+  textSize(100);
+  text(S,0,0);
+  popMatrix();
+  
+  pushMatrix();
+  translate(600,325);
+  textSize(100);
+  text(A,0,0);
+  popMatrix();
+  
+  pushMatrix();
+  translate(600,525);
+  textSize(100);
+  text(T,0,0);
+  popMatrix();
+  
+  pushMatrix();
+  translate(600,725);
+  textSize(100);
+  text(S,0,0);
+  popMatrix();
+  
   characterMovement();
 }
 
 //Draws background objects/scenery and the character
 void drawLeap()
 {
-  background(175, 143, 84);
+  background(232, 193, 99);
   
   //Draws background objects/scenery
   fill(58, 55, 50);
@@ -245,10 +468,74 @@ void drawLeap()
   characterMovement();
 }
 
-
 void drawGrail()
 {
-  background(193, 168, 247);
+  background(232, 193, 99);
+  
+  
+  pushMatrix();
+  fill(104, 83, 56);
+  translate(70,150);
+  rect(0,0,120,120);
+  popMatrix();//left alter base
+  
+  pushMatrix();
+  fill(104, 83, 56);
+  translate(600,150);
+  rect(0,0,120,120);
+  popMatrix();//right alter base
+  
+  pushMatrix();
+  fill(104, 83, 56);
+  translate(335,150);
+  rect(0,0,120,120);
+  popMatrix();//middle alter base
+  
+  pushMatrix();
+  fill(168, 3, 3);
+  translate(96,150);
+  rect(0,0,65,90);
+  popMatrix();//left red piece
+  
+  pushMatrix();
+  fill(168, 3, 3);
+  translate(362,150);
+  rect(0,0,65,90);
+  popMatrix();//middle red piece
+  
+  pushMatrix();
+  fill(168, 3, 3);
+  translate(628,150);
+  rect(0,0,65,90);
+  popMatrix();//right red piece
+  
+  pushMatrix();
+  fill(242, 239, 62);
+  translate(650,130);
+  rect(-2,0,19,33);
+  ellipse(7,0,50,35);
+  fill(232, 193, 99);
+  rect(-20,-20,60,20);
+  popMatrix();//right chalice
+  
+  pushMatrix();
+  fill(226, 193, 43);
+  translate(385,130);
+  rect(-2,0,19,33);
+  ellipse(7,0,50,35);
+  fill(232, 193, 99);
+  rect(-20,-20,60,20);
+  popMatrix();//middle chalice
+  
+  pushMatrix();
+  fill(155, 127, 79);
+  translate(120,130);
+  rect(-2,0,19,33);
+  ellipse(7,0,50,35);
+  fill(232, 193, 99);
+  rect(-20,-20,60,20);
+  popMatrix();//left chalice
+  
   characterMovement();
 }
 
@@ -301,7 +588,157 @@ void keyPressed() {
   }
 }
 
+//Detects Collisions between rectangles and ellipses
+//This code was influenced by code from: http://www.jeffreythompson.org/collision-detection/circle-rect.php
+boolean collisionRE(float rectX, float rectY, float circleX, float circleY,
+float rectW, float rectH, float circleRadius)
+{
+ PVector topLeft = new PVector(rectX, rectY);
+ PVector topRight = new PVector(rectX + rectW, rectY);
+ PVector botLeft = new PVector(rectX, rectY + rectH);
+ PVector botRight = new PVector(rectX + rectW, rectY + rectH);
+ PVector circleCenter = new PVector(circleX, circleY);
+ 
+ float tLDist = PVector.dist(topLeft, circleCenter);
+ float tRDist = PVector.dist(topRight, circleCenter);
+ float bLDist = PVector.dist(botLeft, circleCenter);
+ float bRDist = PVector.dist(botRight, circleCenter);
+ 
+ if(tLDist < circleRadius || tRDist < circleRadius || bLDist < circleRadius || bRDist < circleRadius)
+ {
+   return true;
+ }
+ else if(circleX < rectX && circleY > rectY && circleY < rectY + rectH)
+ {
+   PVector collisionPt = new PVector(rectX, circleY);
+   if(PVector.dist(collisionPt, circleCenter) < circleRadius)
+   {
+     return true;
+   }
+ }
+ else if(circleX > rectX + rectW && circleY > rectY && circleY < rectY + rectH)
+ {
+   PVector collisionPt = new PVector(rectX + rectW, circleY);
+   if(PVector.dist(collisionPt, circleCenter) < circleRadius)
+   {
+     return true;
+   }
+ }
+ else if(circleY < rectY && circleX > rectX && circleX < rectX + rectW )
+ {
+   PVector collisionPt = new PVector(circleX, rectY);
+   if(PVector.dist(collisionPt, circleCenter) < circleRadius)
+   {
+     return true;
+   }
+ }
+ else if(circleY > rectY + rectH && circleX > rectX && circleX < rectX + rectW)
+ {
+   PVector collisionPt = new PVector(circleX, rectY + rectH);
+   if(PVector.dist(collisionPt, circleCenter) < circleRadius)
+   {
+     return true;
+   }
+ }
+
+ return false;
+}
+
 //-------------------------------------------------------------------------
+
+void drawHenry()
+{
+  pushMatrix();
+  fill(239, 0, 0);
+  translate(-25,0);
+  ellipse(0,0,30,80);
+  popMatrix();
+  
+  pushMatrix();
+  fill(132, 109, 71);
+  translate(-10, 50);
+  rect(0, 0, 20, 90);  //Righ pant leg DH
+  popMatrix();
+  
+  pushMatrix();
+  fill(0);
+  translate(10, 140);
+  ellipse(0, 0, 20, 20);  //Right Shoe Base DH
+  popMatrix();
+  
+  pushMatrix();
+  fill(0);
+  translate(-10, 130);
+  rect(0, 0, 20, 20);  //Right Shoe Upper Sole DH
+  popMatrix();
+  
+  pushMatrix();
+  fill(0);
+  translate(0, 140);
+  rect(0, 0, 20, 10);  //Right Shoe Lower Sole DH
+  popMatrix();
+  
+  fill(242, 236, 227);
+  ellipse(0, 0, 45, 110); //White body DH
+  
+  pushMatrix();
+  fill(252, 230, 176);  //Skin color DH
+  translate(0, -70);
+  ellipse(0, 0, 40, 40);  //Head DH
+  popMatrix();
+  
+  pushMatrix();
+  fill(188, 171, 171);
+  translate(-12,-72);
+  ellipse(0,0,20,40);
+  popMatrix();
+  
+  pushMatrix();
+  fill(255);
+  translate(10, -70);
+  ellipse(0,0, 10, 13);  //Right eye background DH
+  popMatrix();
+  
+  pushMatrix();
+  fill(0);
+  translate(11, -69);
+  ellipse(0, 0, 3, 3);   //Right pupil DH
+  popMatrix();
+  
+  pushMatrix();
+  fill(0);
+  translate(9, -55);
+  rotate(radians(-93));
+  rect(0, 0, .7, 7.5);  //Mouth DH
+  popMatrix();
+ 
+  pushMatrix();
+  fill(214, 213, 164);
+  translate(-25, -40);
+  rect(0, 0, 25, 100);  //Right jacket main body DH
+  popMatrix();
+ 
+  pushMatrix();
+  fill(252, 230, 176);
+  translate(10, 37);
+  ellipse(0, 0, 17, 17); //Right Palm DH
+  popMatrix();
+  
+  pushMatrix();
+  fill(214, 213, 164);
+  translate(-16, -28);
+  rotate(radians(-15));
+  rect(0, 0, 20, 65);  //Right Jacket Sleeve DH
+  popMatrix();
+  
+  pushMatrix();
+  fill(214, 213, 164);
+  translate(-25, -40);
+  triangle(0, 0, 25, 0, 14, -10);  //Jacket collar DH
+  popMatrix();
+   
+}
+
 void drawDrSchnieder()
 {
   pushMatrix();
@@ -313,174 +750,174 @@ void drawDrSchnieder()
   pushMatrix();
   fill(118, 119, 95);
   translate(578, 150);
-  rect(0, 0, 20, 90);  //Left pant leg CS
+  rect(0, 0, 20, 90);  //Left pant leg DS
   popMatrix();
   
   pushMatrix();
   fill(118, 119, 95);
   translate(602, 150);
-  rect(0, 0, 20, 90); //Right pant leg CS
+  rect(0, 0, 20, 90); //Right pant leg DS
   popMatrix();
   
   pushMatrix();
   fill(242, 236, 227);
   translate(600,100);
-  ellipse(0, 0, 45, 110); //White body CS
+  ellipse(0, 0, 45, 110); //White body DS
   popMatrix();
   
   pushMatrix();
-  fill(252, 230, 176);  //Skin color CS
+  fill(252, 230, 176);  //Skin color DS
   translate(600, 30);
-  ellipse(0, 0, 40, 50);  //Head CS
+  ellipse(0, 0, 40, 50);  //Head DS
   popMatrix();
   
   pushMatrix();
   fill(252, 230, 176); 
   translate(582, 30);
-  ellipse(0, 0, 10, 15);  //Left ear CS
+  ellipse(0, 0, 10, 15);  //Left ear DS
   popMatrix();
   
   pushMatrix();
   fill(252, 230, 176); 
   translate(618, 30);
-  ellipse(0, 0, 10, 15);  //Right ear CS
+  ellipse(0, 0, 10, 15);  //Right ear DS
   popMatrix();
   
   pushMatrix();
   fill(255);
   translate(590, 30);
-  ellipse(0,0, 10, 13); //Left eye background CS
+  ellipse(0,0, 10, 13); //Left eye background DS
   popMatrix();
   
   pushMatrix();
   fill(255);
   translate(610, 30);
-  ellipse(0,0, 10, 13);  //Right eye background CS
+  ellipse(0,0, 10, 13);  //Right eye background DS
   popMatrix();
   
   pushMatrix();
   fill(0);
   translate(591, 31);
-  ellipse(0, 0, 3, 3);  //Left pupil CS
+  ellipse(0, 0, 3, 3);  //Left pupil DS
   popMatrix();
   
   pushMatrix();
   fill(0);
   translate(609, 31);
-  ellipse(0, 0, 3, 3);   //Right pupil CS
+  ellipse(0, 0, 3, 3);   //Right pupil DS
   popMatrix();
   
   pushMatrix();
   fill(0);
   translate(600,32);
   rotate(radians(-40));
-  rect(0, 0, .5, 9.5);  //Top part of nose CS
+  rect(0, 0, .5, 9.5);  //Top part of nose DS
   popMatrix();
   
   pushMatrix();
   fill(0);
   translate(599, 40);
   rotate(radians(-90));
-  rect(0, 0, .5, 7);  //Bottom part of nose CS
+  rect(0, 0, .5, 7);  //Bottom part of nose DS
   popMatrix();
   
   pushMatrix();
   fill(186, 74, 0);
   translate(598, 48);
   rotate(radians(-85));
-  rect(0, 0, .7, 7.5);  //Mouth CS
+  rect(0, 0, .7, 7.5);  //Mouth DS
   popMatrix();
   
   pushMatrix();
   fill(220, 226, 83);
   translate(600, 13);
-  ellipse(0, 0, 33, 15);  //hair
+  ellipse(0, 0, 33, 15);  //hair DS
   popMatrix();
   
   pushMatrix();
   fill(44, 109, 55);
   translate(587.5, -7);
-  rect(0, 0, 25, 20);  //Hat top CS
+  rect(0, 0, 25, 20);  //Hat top DS
   popMatrix();
   
   pushMatrix();
   fill(0);
   translate(587.5, 0);
-  rect(0, 0, 25, 6);  //Hat black strap CS
+  rect(0, 0, 25, 6);  //Hat black strap DS
   popMatrix();
   
   pushMatrix();
   fill(209, 202, 150);
   translate(571.5, 60);
-  rect(0, 0, 20, 100);  //Left jacket main body CS
+  rect(0, 0, 20, 100);  //Left jacket main body DS
   popMatrix();
   
   pushMatrix();
   fill(209, 202, 150);
   translate(608.6, 60);
-  rect(0, 0, 20, 100);  //Right jacket main body CS
+  rect(0, 0, 20, 100);  //Right jacket main body DS
   popMatrix();
   
   pushMatrix();
   fill(209, 202, 150);
   translate(571.4, 60);  
-  triangle(0, 0, 20, -8.5, 20, 0);  //Left Jacket Collar CS
+  triangle(0, 0, 20, -8.5, 20, 0);  //Left Jacket Collar DS
   popMatrix();
   
   pushMatrix();
   fill(209, 202, 150);
   translate(608.6, 60);
-  triangle(0,0, 20, 0, 0, -8.5); //Right Jacket Collar CS
+  triangle(0,0, 20, 0, 0, -8.5); //Right Jacket Collar DS
   popMatrix();
   
   pushMatrix();
   fill(252, 230, 176);
   translate(540, 122);
-  ellipse(0, 0, 17, 17);  //Left Palm CS
+  ellipse(0, 0, 17, 17);  //Left Palm DS
   popMatrix();
   
   pushMatrix();
   fill(252, 230, 176);
   translate(660, 122);
-  ellipse(0, 0, 17, 17); //Right Palm CS
+  ellipse(0, 0, 17, 17); //Right Palm DS
   popMatrix();
   
   pushMatrix();
   fill(209, 202, 150);
   translate(571.4, 60);
   rotate(radians(35));
-  rect(0, 0, 20, 65);  //Left Jacket Sleeve CS
+  rect(0, 0, 20, 65);  //Left Jacket Sleeve DS
   popMatrix();
   
   pushMatrix();
   fill(209, 202, 150);
   translate(612, 72);
   rotate(radians(-35));
-  rect(0, 0, 20, 65);  //Right Jacket Sleeve CS
+  rect(0, 0, 20, 65);  //Right Jacket Sleeve DS
   popMatrix();
  
   pushMatrix();
   fill(0);
   translate(588, 240);
-  ellipse(0, 0, 20, 20);  //Left Shoe Base CS
+  ellipse(0, 0, 20, 20);  //Left Shoe Base DS
   popMatrix();
   
   pushMatrix();
   fill(0);
   translate(612, 240);
-  ellipse(0, 0, 20, 20);  //Right Shoe Base CS
+  ellipse(0, 0, 20, 20);  //Right Shoe Base DS
   popMatrix();
   
   pushMatrix();
   fill(0);
   translate(578, 240);
-  rect(0, 0, 20, 10);  //Left Shoe Sole CS
+  rect(0, 0, 20, 10);  //Left Shoe Sole DS
   popMatrix();
   
   pushMatrix();
   fill(0);
   translate(602, 240);
-  rect(0, 0, 20, 10);  //Right Shoe Sole CS
+  rect(0, 0, 20, 10);  //Right Shoe Sole DS
   popMatrix();
   endShape();
 }
@@ -490,19 +927,19 @@ void drawBluesiut()
    pushMatrix();
   fill(239, 245, 255);
   translate(378, 150);
-  rect(0, 0, 20, 90);  //Left pant leg CS
+  rect(0, 0, 20, 90);  //Left pant leg BS
   popMatrix();
   
   pushMatrix();
   fill(239, 245, 255);
   translate(402, 150);
-  rect(0, 0, 20, 90); //Right pant leg CS
+  rect(0, 0, 20, 90); //Right pant leg BS
   popMatrix();
   
   pushMatrix();
   fill(148, 186, 247);
   translate(400,100);
-  ellipse(0, 0, 45, 110); //White body CS
+  ellipse(0, 0, 45, 110); //White body BS
   popMatrix();
 
   pushMatrix();
@@ -514,144 +951,144 @@ void drawBluesiut()
   pushMatrix();
   fill(96, 97, 99);
   translate(400, 13);
-  ellipse(0, 0, 40, 20);  //Hat base CS
+  ellipse(0, 0, 40, 20);  //Hat base BS
   popMatrix();
   
   pushMatrix();
-  fill(252, 230, 176);  //Skin color CS
+  fill(252, 230, 176);  //Skin color BS
   translate(400, 30);
-  ellipse(0, 0, 40, 50);  //Head CS
+  ellipse(0, 0, 40, 50);  //Head BS
   popMatrix();
   
   pushMatrix();
   fill(252, 230, 176); 
   translate(382, 30);
-  ellipse(0, 0, 10, 15);  //Left ear CS
+  ellipse(0, 0, 10, 15);  //Left ear BS
   popMatrix();
   
   pushMatrix();
   fill(252, 230, 176); 
   translate(418, 30);
-  ellipse(0, 0, 10, 15);  //Right ear CS
+  ellipse(0, 0, 10, 15);  //Right ear BS
   popMatrix();
   
   pushMatrix();
   fill(255);
   translate(390, 30);
-  ellipse(0,0, 10, 13); //Left eye background CS
+  ellipse(0,0, 10, 13); //Left eye background BS
   popMatrix();
   
   pushMatrix();
   fill(255);
   translate(410, 30);
-  ellipse(0,0, 10, 13);  //Right eye background CS
+  ellipse(0,0, 10, 13);  //Right eye background BS
   popMatrix();
   
   pushMatrix();
   fill(0);
   translate(391, 31);
-  ellipse(0, 0, 3, 3);  //Left pupil CS
+  ellipse(0, 0, 3, 3);  //Left pupil BS
   popMatrix();
   
   pushMatrix();
   fill(0);
   translate(409, 31);
-  ellipse(0, 0, 3, 3);   //Right pupil CS
+  ellipse(0, 0, 3, 3);   //Right pupil BS
   popMatrix();
   
   pushMatrix();
   fill(0);
   translate(400,32);
   rotate(radians(-40));
-  rect(0, 0, .5, 9.5);  //Top part of nose CS
+  rect(0, 0, .5, 9.5);  //Top part of nose BS
   popMatrix();
   
   pushMatrix();
   fill(0);
   translate(399, 40);
   rotate(radians(-90));
-  rect(0, 0, .5, 7);  //Bottom part of nose CS
+  rect(0, 0, .5, 7);  //Bottom part of nose BS
   popMatrix();
   
   pushMatrix();
   fill(0);
   translate(398, 48);
   rotate(radians(-85));
-  rect(0, 0, .7, 7.5);  //Mouth CS
+  rect(0, 0, .7, 7.5);  //Mouth BS
   popMatrix();
   
   pushMatrix();
   fill(148, 186, 247);
   translate(371.5, 60);
-  rect(0, 0, 20, 100);  //Left jacket main body CS
+  rect(0, 0, 20, 100);  //Left jacket main body BS
   popMatrix();
   
   pushMatrix();
   fill(148, 186, 247);
   translate(408.6, 60);
-  rect(0, 0, 20, 100);  //Right jacket main body CS
+  rect(0, 0, 20, 100);  //Right jacket main body BS
   popMatrix();
   
   pushMatrix();
   fill(148, 186, 247);
   translate(371.4, 60);  
-  triangle(0, 0, 20, -8.5, 20, 0);  //Left Jacket Collar CS
+  triangle(0, 0, 20, -8.5, 20, 0);  //Left Jacket Collar BS
   popMatrix();
   
   pushMatrix();
   fill(148, 186, 247);
   translate(408.6, 60);
-  triangle(0,0, 20, 0, 0, -8.5); //Right Jacket Collar CS
+  triangle(0,0, 20, 0, 0, -8.5); //Right Jacket Collar BS
   popMatrix();
   
   pushMatrix();
   fill(252, 230, 176);
   translate(340, 122);
-  ellipse(0, 0, 17, 17);  //Left Palm CS
+  ellipse(0, 0, 17, 17);  //Left Palm BS
   popMatrix();
   
   pushMatrix();
   fill(252, 230, 176);
   translate(460, 122);
-  ellipse(0, 0, 17, 17); //Right Palm CS
+  ellipse(0, 0, 17, 17); //Right Palm BS
   popMatrix();
   
   pushMatrix();
   fill(148, 186, 247);
   translate(371.4, 60);
   rotate(radians(35));
-  rect(0, 0, 20, 65);  //Left Jacket Sleeve CS
+  rect(0, 0, 20, 65);  //Left Jacket Sleeve BS
   popMatrix();
   
   pushMatrix();
   fill(148, 186, 247);
   translate(412, 72);
   rotate(radians(-35));
-  rect(0, 0, 20, 65);  //Right Jacket Sleeve CS
+  rect(0, 0, 20, 65);  //Right Jacket Sleeve BS
   popMatrix();
  
   pushMatrix();
   fill(0);
   translate(388, 240);
-  ellipse(0, 0, 20, 20);  //Left Shoe Base CS
+  ellipse(0, 0, 20, 20);  //Left Shoe Base BS
   popMatrix();
   
   pushMatrix();
   fill(0);
   translate(412, 240);
-  ellipse(0, 0, 20, 20);  //Right Shoe Base CS
+  ellipse(0, 0, 20, 20);  //Right Shoe Base BS
   popMatrix();
   
   pushMatrix();
   fill(0);
   translate(378, 240);
-  rect(0, 0, 20, 10);  //Left Shoe Sole CS
+  rect(0, 0, 20, 10);  //Left Shoe Sole BS
   popMatrix();
   
   pushMatrix();
   fill(0);
   translate(402, 240);
-  rect(0, 0, 20, 10);  //Right Shoe Sole CS
+  rect(0, 0, 20, 10);  //Right Shoe Sole BS
   popMatrix();
 }
 
@@ -659,12 +1096,36 @@ void drawBluesiut()
 //CS Stands for Character Start
 void drawCharacterStart()
 {
-  //HitBox
+  //HitBox Head, Body, Legs
+  //Can increase head size to make hitbox make more sense!!!!
+  //also can maybe use setVisible() to make it invisible
+  /*
+  pushMatrix();
+  playerHitbox.setFill(255);
+  translate(-30, -110);
+  shape(playerHitbox,0,0);
+  popMatrix();
+  */
+  
+  /*
   pushMatrix();
   fill(255);
-  translate(0, 20);
-  ellipse(0,0, 135, 265);
+  translate(-30, -110);
+  rect(0,0, hitBoxW, hitBoxH);
   popMatrix();
+  */
+  
+  //HitBox Arms
+  //Maybe rotate arms more to sides so that I don't have to do two hitboxes
+  //Also just change the dimensions of the rect instead of rotating it!!!!!
+  /*
+  pushMatrix();
+  fill(0);
+  translate(75, -40);
+  rotate(radians(90));
+  rect(0,0, 73, 145);
+  popMatrix();
+  */
   
   pushMatrix();
   fill(132, 109, 71);
@@ -843,13 +1304,16 @@ void drawCharacterStart()
 void drawCharacterUp()
 {
   
-  //HitBox
+  //HitBox Head, Body, Legs
+  //Can increase head size to make hitbox make more sense!!!!
+  //also can maybe use setVisible() to make it invisible
+  /*
   pushMatrix();
   fill(255);
-  translate(0, 20);
-  ellipse(0,0, 135, 265);
+  translate(-30, -110);
+  rect(0,0, hitBoxW, hitBoxH);
   popMatrix();
-  
+  */
   pushMatrix();
   fill(132, 109, 71);
   translate(-22, 50);
@@ -969,12 +1433,16 @@ void drawCharacterUp()
 void drawCharacterLeft()
 {
   
-  //HitBox
+  //HitBox Head, Body, Legs
+  //Can increase head size to make hitbox make more sense!!!!
+  //also can maybe use setVisible() to make it invisible
+  /*
   pushMatrix();
   fill(255);
-  translate(0, 20);
-  ellipse(0,0, 80, 265);
+  translate(-30, -110);
+  rect(0,0, hitBoxW, hitBoxH);
   popMatrix();
+  */
   
   pushMatrix();
   fill(132, 109, 71);
@@ -1077,12 +1545,16 @@ void drawCharacterLeft()
 void drawCharacterRight()
 {
   
-  //HitBox
+  //HitBox Head, Body, Legs
+  //Can increase head size to make hitbox make more sense!!!!
+  //also can maybe use setVisible() to make it invisible
+  /*
   pushMatrix();
   fill(255);
-  translate(0, 20);
-  ellipse(0,0, 80, 265);
+  translate(-30, -110);
+  rect(0,0, hitBoxW, hitBoxH);
   popMatrix();
+  */
   
   pushMatrix();
   fill(132, 109, 71);
