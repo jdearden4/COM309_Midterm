@@ -42,6 +42,40 @@ float hitBoxY = 0;
 float hitBoxW = 60;
 float hitBoxH = 259;
 
+float feetHitBoxX = 0;
+float feetHitBoxY = 0;
+float feetHitBoxR = 20;  //update this once figure out radius
+
+float lettersBrX = 400;  //Bottom right hitbox X position
+float lettersBrY = 400;  //Bottom right hitbox Y position
+float lettersBrW = 300;
+float lettersBrH = 400;
+
+float lettersTpX = 250;  //Top hitbox X position
+float lettersTpY = 0;    //Top hitbox Y position
+float lettersTpW = 450;
+float lettersTpH = 200;
+
+float lettersLsX = 100;  //Left side hitbox X position
+float lettersLsY = 0;    //Left side hitbox Y position
+float lettersLsW = 150;
+float lettersLsH = 600;
+
+float grailLX = 96;  //Left Grail X position
+float grailLY = 300;
+float grailLW = 65;
+float grailLH = 65;
+
+float grailMX = 362;  //Middle Grail X position
+float grailMY = 300;
+float grailMW = 65;
+float grailMH = 65;
+
+float grailRX = 628;  //Right Grail X position
+float grailRY = 300;
+float grailRW = 65;
+float grailRH = 65;
+
 float timer = 0;
 float step = 0.001;
 
@@ -53,7 +87,7 @@ void setup()
   frameRate(30);
   
   //Starting positions of moveX and moveY
-  moveX = 90;
+  moveX = 50;   //Original was 90
   moveY = 360;
 
 }
@@ -83,6 +117,8 @@ void draw()
     drawEntrance();
     //drawLeap();
     //drawSaws();
+    //drawLetters();
+    //drawGrail();
   }
   
   //If screenNum variable is equal to one then draws the scene 
@@ -109,12 +145,22 @@ void draw()
     drawGrail();
   }
   
+  else if(screenNum == 6)
+  {
+    drawVictoryScreen();
+  }
+  
+  else if(screenNum == 7)
+  {
+    drawLossScreen();
+  }
+  
 }
 
 //Sets screenNum variable to 1 if the mouse has been pressed
 void mousePressed() 
 {
-  if (screenNum == 0) 
+  if (screenNum == 0 || screenNum == 6 || screenNum == 7) 
   {
     screenNum = 1;
   }
@@ -265,8 +311,10 @@ void drawSaws()
   {
     if (lives <= 0)
     {
-      screenNum = 1;
+      screenNum = 7;
       lives = 3;
+      moveX = 50;   
+      moveY = 360;
     }
     else if (lives > 0) //Add && hasGrail == false if get grail walking part to work
     {
@@ -284,14 +332,12 @@ void drawSaws()
     }
     */
   }
-  
-  println(lives);
-  
 }
 
 void drawLetters()
 {
   background(232, 193, 99);
+  
   String I = "I";
   String E = "E";
   String H = "H";
@@ -418,7 +464,39 @@ void drawLetters()
   text(S,0,0);
   popMatrix();
   
+  feetHitBoxX = moveX;
+  feetHitBoxY = moveY + 130;
+  
   characterMovement();
+  
+  pushMatrix();
+  fill(255);
+  translate(feetHitBoxX, feetHitBoxY);
+  ellipse(0,0, 40, 40);
+  popMatrix();
+  
+  if(collisionRE(lettersBrX, lettersBrY, feetHitBoxX, feetHitBoxY, 
+  lettersBrW, lettersBrH, feetHitBoxR) || collisionRE(lettersTpX, lettersTpY, 
+  feetHitBoxX, feetHitBoxY, lettersTpW, lettersTpH, feetHitBoxR) ||
+  collisionRE(lettersLsX, lettersLsY, feetHitBoxX, feetHitBoxY, 
+  lettersLsW, lettersLsH, feetHitBoxR))
+  {
+    if (lives <= 0)
+    {
+      screenNum = 7;
+      lives = 3;
+      moveX = 50;   
+      moveY = 360;
+    }
+    else if (lives > 0) //Add && hasGrail == false if get grail walking part to work
+    {
+      moveX = 50;
+      moveY = 360;
+      lives = lives - 1;
+    }
+  }
+  
+ 
 }
 
 //Draws background objects/scenery and the character
@@ -472,7 +550,6 @@ void drawGrail()
 {
   background(232, 193, 99);
   
-  
   pushMatrix();
   fill(104, 83, 56);
   translate(70,150);
@@ -519,7 +596,8 @@ void drawGrail()
   popMatrix();//right chalice
   
   pushMatrix();
-  fill(226, 193, 43);
+  //fill(226, 193, 43);
+  fill(255, 218, 96);
   translate(385,130);
   rect(-2,0,19,33);
   ellipse(7,0,50,35);
@@ -536,7 +614,76 @@ void drawGrail()
   rect(-20,-20,60,20);
   popMatrix();//left chalice
   
+  feetHitBoxX = moveX;
+  feetHitBoxY = moveY + 130;
+  
+  pushMatrix();
+  fill(0);
+  translate(grailLX, grailLY);
+  rect(0, 0, grailLW, grailLH);
+  popMatrix();
+  
+  pushMatrix();
+  fill(0);
+  translate(grailMX, grailMY);
+  rect(0, 0, grailMW, grailMH);
+  popMatrix();
+  
+  pushMatrix();
+  fill(0);
+  translate(grailRX, grailRY);
+  rect(0, 0, grailRW, grailRH);
+  popMatrix();
+  
   characterMovement();
+  
+  pushMatrix();
+  fill(255);
+  translate(feetHitBoxX, feetHitBoxY);
+  ellipse(0,0, 40, 40);
+  popMatrix();
+  
+  //temporary victory condition: picking the right grail
+  if(collisionRE(grailLX, grailLY, feetHitBoxX, feetHitBoxY, 
+  grailLW, grailLH, feetHitBoxR)) 
+  {
+    screenNum = 6;
+    
+    lives = 3;
+    
+    moveX = 50;   
+    moveY = 360;
+  }
+  else if(collisionRE(grailMX, grailMY, feetHitBoxX, feetHitBoxY, 
+  grailMW, grailMH, feetHitBoxR)) 
+  {
+    screenNum = 7;
+    
+    lives = 3;
+    
+    moveX = 50;   
+    moveY = 360;
+  }
+  else if(collisionRE(grailRX, grailRY, feetHitBoxX, feetHitBoxY, 
+  grailRW, grailRH, feetHitBoxR)) 
+  {
+    screenNum = 7;
+    
+    lives = 3;
+    
+    moveX = 50;   
+    moveY = 360;
+  }
+}
+
+void drawVictoryScreen()
+{
+  background(237, 130, 85);
+}
+
+void drawLossScreen()
+{
+  background(142, 34, 128);
 }
 
 //--------------------------------------------------------------------------------
@@ -566,7 +713,7 @@ void keyPressed() {
       if(moveX > 800 && screenNum != 5) //Changes the scene if the character is far enought to the right
       {
         screenNum = screenNum + 1;
-        moveX = 90;
+        moveX = 40;
       }
      
       direction = 2;
@@ -580,7 +727,7 @@ void keyPressed() {
       if(moveX < 0 && screenNum != 1) //Changes the scene if the character is far enought to the left
       {
         screenNum = screenNum - 1;
-        moveX = 710;
+        moveX = 760;
       }
       direction = 3;
       moveX = moveX - playerSpeed;
