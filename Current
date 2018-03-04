@@ -151,13 +151,17 @@ void draw()
   {
     drawLossScreen();
   }
+  else if (screenNum == 8)
+  {
+    drawGrailLossScreen();
+  }
   
 }
 
 //Sets screenNum variable to 1 if the mouse has been pressed
 void mousePressed() 
 {
-  if (screenNum == 0 || screenNum == 6 || screenNum == 7) 
+  if (screenNum == 0 || screenNum == 6 || screenNum == 7 || screenNum == 8) 
   {
     screenNum = 1;
   }
@@ -243,13 +247,26 @@ void characterMovement()
   popMatrix();
 }
 
+//-----------------------------------------------------------------------
+void drawLife()
+{
+  String lifeInfo = "Lives: ";
+  
+  pushMatrix();
+  fill(0);
+  translate(705, 30);
+  textSize(25);
+  text(lifeInfo + lives, 0, 0);
+  popMatrix();
+}
+
 //Draws the different Scenes
 //-----------------------------------------------------------------------
 
 void drawEntrance()
 {
   background(232, 193, 99);
-
+  
   fill(0);
   rect(0,150,800,4);
   
@@ -273,6 +290,8 @@ void drawEntrance()
   
   feetHitBoxX = moveX;
   feetHitBoxY = moveY + 130;
+  
+  drawLife();
   
   characterMovement();
   
@@ -301,6 +320,8 @@ void drawSaws()
 {
   background(232, 193, 99);
   
+  drawLife();
+  
   timer += step;
   float moveSaw = sin(degrees(timer))*10.0f;
 
@@ -315,6 +336,8 @@ void drawSaws()
   translate(hitBoxX, hitBoxY);
   rect(0,0, hitBoxW, hitBoxH);
   popMatrix();
+  
+  drawLife();
   
   characterMovement();
   
@@ -491,6 +514,8 @@ void drawLetters()
   feetHitBoxX = moveX;
   feetHitBoxY = moveY + 130;
   
+  drawLife();
+  
   characterMovement();
   
   pushMatrix();
@@ -572,6 +597,8 @@ void drawLeap()
   rotate(radians(12));
   rect(0, 0, 15, 30);//Holy Grail Base
   popMatrix();
+  
+  drawLife();
   
   //Draws Character and allows him to move around
   characterMovement();
@@ -669,6 +696,8 @@ void drawGrail()
   rect(0, 0, grailRW, grailRH);
   popMatrix();
   
+  drawLife();
+  
   characterMovement();
   
   pushMatrix();
@@ -686,7 +715,7 @@ void drawGrail()
   else if(collisionRE(grailMX, grailMY, feetHitBoxX, feetHitBoxY, 
   grailMW, grailMH, feetHitBoxR)) 
   {
-    screenNum = 7;
+    screenNum = 8;
     
     lives = 3;
     hasGrail = false;
@@ -697,7 +726,7 @@ void drawGrail()
   else if(collisionRE(grailRX, grailRY, feetHitBoxX, feetHitBoxY, 
   grailRW, grailRH, feetHitBoxR)) 
   {
-    screenNum = 7;
+    screenNum = 8;
     
     lives = 3;
     hasGrail = false;
@@ -717,6 +746,11 @@ void drawVictoryScreen()
 void drawLossScreen()
 {
   background(142, 34, 128);
+}
+
+void drawGrailLossScreen()
+{
+  
 }
 
 //--------------------------------------------------------------------------------
