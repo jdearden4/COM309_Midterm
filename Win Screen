@@ -1,0 +1,14 @@
+void drawVictoryScreen()
+{
+  background(255);
+  String win = "Congratulations you have saved Henry Jones";
+  String restart = "Click to play again";
+  
+  pushMatrix();
+  translate(80,400);
+  fill(0);
+  textSize(30);
+  text(win,0,0);
+  text(restart,180,100);
+  popMatrix();
+}
